@@ -9,17 +9,25 @@ const FetchCheck = (props) => {
     const [checks, setChecks] = useState(null);
     const history = useHistory();
     const [isSubmitDisabled,disableSubmit]=useState(true);
-    let results = [], dataArray=[];
+    const [dataArray, setDataArray] = useState([]);
     useEffect(() => {
-        fetchChecks().then(p => setChecks(p));
+        fetchChecks().then(p => {
+            let data = [];
+            p.sort((a,b) => a.priority - b.priority);
+            for(let i=0;i<p.length;i++) {
+                data.push({'id': i,'checkId':p[i].id, 'value' : null});
+           }
+            setChecks(p);
+            setDataArray(data);
+        });
     }, []);
     if (checks === null) {
         return <h2>Loading...</h2>;
     }
     return (
         <div className="App">
-            {checks.sort((a, b) => a.priority > b.priority ? 1 : -1).map((check, index) => (
-                <div  key={check.id}  className={`container ${disableElement(check, index)}`} onKeyUp={handleKey} onKeyDown={disableEnter}>
+            {checks.map((check, index) => (
+                <div  key={check.id}  className={`container ${disableElement(check)}`} onKeyUp={handleKey} onKeyDown={disableEnter}>
                     <div className="question"><span>{check.description}</span></div>
                     <div className="tab" value="" id={index}>
                         <button id="yes" tabIndex="-1"  value={"Yes"} onClick={handleButton} autoFocus={isAutoFocusEnable(check,index)}>Yes</button>
@@ -33,11 +41,9 @@ const FetchCheck = (props) => {
     );
      /**
    * @param check - check 
-   * @param i - index of div
    * disables all elements except first div. create data array, to  update yes no button values
    */
-    function disableElement(check,index) {
-        dataArray[index]={'id': index,'checkId':check.id, 'value' : null};
+    function disableElement(check) {
         return checks[0] === check ? false : "disabled"; 
     }
     /**
@@ -66,7 +72,14 @@ const FetchCheck = (props) => {
     function enableNextQuestion(elementId) {
         if (document.getElementById(elementId)) {
             document.getElementById(elementId).parentElement.classList.remove("disabled");
-            disableSubmit(true);
+            for (let i=0;i<dataArray.length;i++)
+            {
+                if(dataArray[i].value===null)
+                {
+                    disableSubmit(true);
+                    break;
+                }
+            }
         }
         else {
             disableSubmit(false);
@@ -136,12 +149,9 @@ const FetchCheck = (props) => {
                 finalData[i] = { 'checkId': dataArray[i].checkId, 'result': dataArray[i].value };
             }
         }
-        submitCheckResults(results).then(() => {
+        submitCheckResults(finalData).then(() => {
             history.push("./success");
-         }).catch(() => {
-             alert("Submission Failed!!!");
-             window.location.reload();
-         });
+         }).catch(() => alert("Submission Failed!!!"));
     }
 }
   export default FetchCheck;
