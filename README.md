@@ -36,3 +36,15 @@ shortcuts. Keyboard shortcuts work as follows:
 ● 1 to answer check as Yes
 
 ● 2 to answer check as No
+
+# Demo
+
+1. Mouse capture
+
+![mouse-capture](https://user-images.githubusercontent.com/88626686/137091288-26a45aad-ddab-445a-bcec-4328d6bc3013.gif)
+
+
+2. Keyboard capture
+
+![keyboard-capture](https://user-images.githubusercontent.com/88626686/137091326-fb197ee6-5f0d-4c21-9ee1-f482f419afc3.gif)
+
