@@ -1,4 +1,4 @@
-# veriff-assignment-react
+# React practice
 Verification engine is based on checks. Every verification session has a set of required checks that must be answered for the decision to be made.
 
 # Tech Stack
